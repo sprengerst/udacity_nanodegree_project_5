@@ -1,7 +1,6 @@
 package com.example.xyzreader.ui;
 
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +10,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -49,9 +47,10 @@ public class ArticleDetailActivity extends AppCompatActivity
         mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mPagerAdapter);
-        mPager.setPageMargin((int) TypedValue
-                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
-        mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
+
+//        mPager.setPageMargin((int) TypedValue
+//                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
+//        mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override

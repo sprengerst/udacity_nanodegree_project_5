@@ -89,7 +89,6 @@ public class ArticleDetailFragment extends Fragment implements
         mCoordinatorLayout = (CoordinatorLayout)
                 mRootView.findViewById(R.id.detail_frame_layout);
 
-
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
 
         mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
