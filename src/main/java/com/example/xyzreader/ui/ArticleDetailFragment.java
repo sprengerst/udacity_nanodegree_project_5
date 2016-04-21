@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016. Stefan Sprenger
+ */
+
 package com.example.xyzreader.ui;
 
 import android.content.Intent;
@@ -5,7 +9,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
@@ -27,11 +30,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 
-/**
- * A fragment representing a single Article detail screen. This fragment is
- * either contained in a {@link ArticleListActivity} in two-pane mode (on
- * tablets) or a {@link ArticleDetailActivity} on handsets.
- */
 public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AppBarLayout.OnOffsetChangedListener{
     private static final String TAG = "ArticleDetailFragment";
@@ -41,16 +39,13 @@ public class ArticleDetailFragment extends Fragment implements
     private Cursor mCursor;
     private long mItemId;
     private View mRootView;
-    private CoordinatorLayout mCoordinatorLayout;
 
     private ImageView mPhotoView;
-    private boolean mIsCard = false;
     private TextView mTitle;
     private LinearLayout mTitleContainer;
     private AppBarLayout mAppBarLayout;
 
-    public ArticleDetailFragment() {
-    }
+    public ArticleDetailFragment() {}
 
     public static ArticleDetailFragment newInstance(long itemId) {
         Bundle arguments = new Bundle();
@@ -69,22 +64,12 @@ public class ArticleDetailFragment extends Fragment implements
             mItemId = getArguments().getLong(ARG_ITEM_ID);
         }
 
-        mIsCard = getResources().getBoolean(R.bool.detail_is_card);
         setHasOptionsMenu(true);
-    }
-
-    public ArticleDetailActivity getActivityCast() {
-        return (ArticleDetailActivity) getActivity();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        // In support library r8, calling initLoader for a fragment in a FragmentPagerAdapter in
-        // the fragment's onCreate may cause the same LoaderManager to be dealt to multiple
-        // fragments because their mIndex is -1 (haven't been added to the activity yet). Thus,
-        // we do this in onActivityCreated.
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -92,8 +77,6 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        mCoordinatorLayout = (CoordinatorLayout)
-                mRootView.findViewById(R.id.detail_frame_layout);
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
 
@@ -106,8 +89,6 @@ public class ArticleDetailFragment extends Fragment implements
                         .getIntent(), getString(R.string.action_share)));
             }
         });
-
-
 
         bindViews();
 
@@ -133,16 +114,15 @@ public class ArticleDetailFragment extends Fragment implements
             return;
         }
 
-//        TextView tileViewToolbar = (TextView) mRootView.findViewById(R.id.article_title_toolbar);
         TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
         bylineView.setMovementMethod(new LinkMovementMethod());
+
         TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
-        mTitle = (TextView) mRootView.findViewById(R.id.main_textview_title);
         TextView titleLine = (TextView) mRootView.findViewById(R.id.article_titleline);
 
+        mTitle = (TextView) mRootView.findViewById(R.id.main_textview_title);
         mAppBarLayout = (AppBarLayout) mRootView.findViewById(R.id.app_bar_layout);
         mAppBarLayout.addOnOffsetChangedListener(this);
-
         mTitleContainer = (LinearLayout) mRootView.findViewById(R.id.main_linearlayout_title);
 
         if (mCursor != null) {
@@ -184,8 +164,6 @@ public class ArticleDetailFragment extends Fragment implements
         }
     }
 
-
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return ArticleLoader.newInstanceForItemId(getActivity(), mItemId);
@@ -216,17 +194,11 @@ public class ArticleDetailFragment extends Fragment implements
         bindViews();
     }
 
-
-
-    // Animation stuff
-
-
+    // Animation stuff for title bar
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
         float percentage = (float) Math.abs(offset) / (float) maxScroll;
-
-        System.out.println("OFFSETCHANGED");
         handleAlphaOnTitle(percentage);
         handleToolbarTitleVisibility(percentage);
     }
@@ -240,14 +212,11 @@ public class ArticleDetailFragment extends Fragment implements
 
     private void handleToolbarTitleVisibility(float percentage) {
         if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
-
             if(!mIsTheTitleVisible) {
                 startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
                 mIsTheTitleVisible = true;
             }
-
         } else {
-
             if (mIsTheTitleVisible) {
                 startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
                 mIsTheTitleVisible = false;
