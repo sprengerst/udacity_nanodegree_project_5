@@ -52,6 +52,7 @@ public class ArticleDetailFragment extends Fragment implements
         arguments.putLong(ARG_ITEM_ID, itemId);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
+
         return fragment;
     }
 
