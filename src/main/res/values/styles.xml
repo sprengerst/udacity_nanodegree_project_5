@@ -19,18 +19,15 @@
 
 
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorAccent">@color/accent</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="Toolbar">
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">?colorPrimary</item>
     </style>
 
 
-
-    <!--<style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">-->
-
-    <!--</style>-->
 
 </resources>
