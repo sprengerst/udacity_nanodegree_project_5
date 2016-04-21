@@ -114,7 +114,7 @@
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp">
+            android:layout_margin="10dp">
         <TextView
             android:id="@+id/article_body"
             android:layout_width="wrap_content"
@@ -129,13 +129,17 @@
     </ScrollView>
 
     <android.support.design.widget.FloatingActionButton
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/share_fab"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
-        android:contentDescription="@string/action_share"
-        android:src="@drawable/ic_share" />
+        app:elevation="@dimen/fab_elevation"
+        app:borderWidth="0dp"
+        app:rippleColor="@color/primary_light"
+        android:src="@drawable/ic_share"
+        app:backgroundTint="@color/accent" />
 
 </android.support.design.widget.CoordinatorLayout>
