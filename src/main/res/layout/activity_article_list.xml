@@ -10,7 +10,7 @@
         android:layout_height="?actionBarSize"
         app:contentInsetStart="72dp"
         app:layout_collapseMode="pin"
-        app:theme="@style/Toolbar">
+        app:theme="@style/MainToolBar">
 
         <ImageView
             android:layout_width="match_parent"
@@ -18,7 +18,6 @@
             android:contentDescription="@string/app_name"
             android:scaleType="centerInside"
             android:src="@drawable/logo" />
-
 
     </android.support.v7.widget.Toolbar>
 
