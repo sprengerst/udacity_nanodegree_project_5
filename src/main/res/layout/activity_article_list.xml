@@ -10,7 +10,6 @@
         android:layout_height="?actionBarSize"
         app:contentInsetStart="72dp"
         app:layout_collapseMode="pin"
-        app:navigationIcon="@drawable/ic_menu"
         app:theme="@style/Toolbar">
 
         <ImageView

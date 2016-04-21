@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -16,7 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -30,7 +33,7 @@ import com.example.xyzreader.data.ArticleLoader;
  * tablets) or a {@link ArticleDetailActivity} on handsets.
  */
 public class ArticleDetailFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, AppBarLayout.OnOffsetChangedListener{
     private static final String TAG = "ArticleDetailFragment";
 
     public static final String ARG_ITEM_ID = "item_id";
@@ -42,6 +45,9 @@ public class ArticleDetailFragment extends Fragment implements
 
     private ImageView mPhotoView;
     private boolean mIsCard = false;
+    private TextView mTitle;
+    private LinearLayout mTitleContainer;
+    private AppBarLayout mAppBarLayout;
 
     public ArticleDetailFragment() {
     }
@@ -101,8 +107,24 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
+
+
         bindViews();
+
+        startAlphaAnimation(mTitle, 0, View.INVISIBLE);
         return mRootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAppBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAppBarLayout.removeOnOffsetChangedListener(this);
     }
 
 
@@ -111,16 +133,24 @@ public class ArticleDetailFragment extends Fragment implements
             return;
         }
 
-        TextView tileViewToolbar = (TextView) mRootView.findViewById(R.id.article_title_toolbar);
+//        TextView tileViewToolbar = (TextView) mRootView.findViewById(R.id.article_title_toolbar);
         TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
         bylineView.setMovementMethod(new LinkMovementMethod());
         TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
+        mTitle = (TextView) mRootView.findViewById(R.id.main_textview_title);
+        TextView titleLine = (TextView) mRootView.findViewById(R.id.article_titleline);
+
+        mAppBarLayout = (AppBarLayout) mRootView.findViewById(R.id.app_bar_layout);
+        mAppBarLayout.addOnOffsetChangedListener(this);
+
+        mTitleContainer = (LinearLayout) mRootView.findViewById(R.id.main_linearlayout_title);
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
             mRootView.setVisibility(View.VISIBLE);
             mRootView.animate().alpha(1);
-            tileViewToolbar.setText(mCursor.getString(ArticleLoader.Query.TITLE));
+            mTitle.setText(mCursor.getString(ArticleLoader.Query.TITLE));
+            titleLine.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             bylineView.setText(Html.fromHtml(
                     DateUtils.getRelativeTimeSpanString(
                             mCursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
@@ -148,11 +178,13 @@ public class ArticleDetailFragment extends Fragment implements
                     });
         } else {
             mRootView.setVisibility(View.GONE);
-            tileViewToolbar.setText("N/A");
+            mTitle.setText("N/A");
             bylineView.setText("N/A" );
             bodyView.setText("N/A");
         }
     }
+
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -182,6 +214,71 @@ public class ArticleDetailFragment extends Fragment implements
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mCursor = null;
         bindViews();
+    }
+
+
+
+    // Animation stuff
+
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(offset) / (float) maxScroll;
+
+        System.out.println("OFFSETCHANGED");
+        handleAlphaOnTitle(percentage);
+        handleToolbarTitleVisibility(percentage);
+    }
+
+    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
+    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS     = 0.3f;
+    private static final int ALPHA_ANIMATIONS_DURATION              = 200;
+
+    private boolean mIsTheTitleVisible          = false;
+    private boolean mIsTheTitleContainerVisible = true;
+
+    private void handleToolbarTitleVisibility(float percentage) {
+        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
+
+            if(!mIsTheTitleVisible) {
+                startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleVisible = true;
+            }
+
+        } else {
+
+            if (mIsTheTitleVisible) {
+                startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleVisible = false;
+            }
+        }
+    }
+
+    private void handleAlphaOnTitle(float percentage) {
+        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
+            if(mIsTheTitleContainerVisible) {
+                startAlphaAnimation(mTitleContainer, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleContainerVisible = false;
+            }
+
+        } else {
+
+            if (!mIsTheTitleContainerVisible) {
+                startAlphaAnimation(mTitleContainer, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleContainerVisible = true;
+            }
+        }
+    }
+
+    public static void startAlphaAnimation (View v, long duration, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+                ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
     }
 
 }
