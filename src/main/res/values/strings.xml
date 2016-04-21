@@ -10,5 +10,8 @@
     <string name="up">Up</string>
     <string name="transition_photo">transition_foto_key</string>
     <string name="transition_title">transition_title_key</string>
+    <string name="demo_title">This is the demo TITLE</string>
+    <string name="demo_author">This is the author line</string>
+    <string name="demotext">demotext</string>
 
 </resources>

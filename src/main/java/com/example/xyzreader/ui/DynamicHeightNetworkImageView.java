@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016. Stefan Sprenger
+ */
+
 package com.example.xyzreader.ui;
 
 import android.content.Context;
